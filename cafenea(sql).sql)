@@ -1,0 +1,248 @@
+
+-- Last modification date: 2023-01-12 20:18:42.397
+
+-- tables
+-- Table: Angajati
+
+
+
+
+select * from Furnizori;
+select * from Comenzi;
+select * from Produse;
+select * from Vanzari;
+select * from Angajati;
+select * from Depozit;
+select * from Clienti;
+
+
+
+CREATE TABLE Angajati (
+    angajatID number(5)  NOT NULL,
+    nume varchar2(20)  NOT NULL,
+    nrtelefon number(10)  NOT NULL,
+    email varchar2(20)  NOT NULL,
+    post varchar2(20)  NOT NULL,
+    salariul number(10)  NOT NULL,
+    CONSTRAINT Angajati_pk PRIMARY KEY (angajatID)
+) ;
+
+-- Table: Clienti
+CREATE TABLE Clienti (
+    clientID number(5)  NOT NULL,
+    nume varchar2(20)  NOT NULL,
+    nrtelefon number(10)  NOT NULL,
+    adresa varchar2(20)  NOT NULL,
+    loialitate number(5)  NOT NULL,
+    preferinte varchar2(20)  NOT NULL,
+    CONSTRAINT clientID PRIMARY KEY (clientID)
+) ;
+
+-- Table: Comenzi
+CREATE TABLE Comenzi (
+    comandaID number(5)  NOT NULL,
+    dataComanda varchar2(15)  NOT NULL,
+    costTotal number(5)  NOT NULL,
+    metodaDePlata varchar2(5)  NOT NULL,
+    statusComanda varchar2(10)  NOT NULL,
+    clientID number(5)  NOT NULL,
+    CONSTRAINT Comenzi_pk PRIMARY KEY (comandaID)
+) ;
+
+-- Table: ComenzileAngajatilor
+CREATE TABLE ComenzileAngajatilor (
+    Comenzi_comandaID number(5)  NOT NULL,
+    Angajati_angajatID number(5)  NOT NULL,
+    CONSTRAINT ComenzileAngajatilor_pk PRIMARY KEY (Comenzi_comandaID,Angajati_angajatID)
+) ;
+
+-- Table: Depozit
+CREATE TABLE Depozit (
+    depozitID number(5)  NOT NULL,
+    cantitate number(5)  NOT NULL,
+    cost number(5)  NOT NULL,
+    rePastrare number(10)  NOT NULL,
+    reComanda number(10)  NOT NULL,
+    valoareDepozit number(5)  NOT NULL,
+    produseID number(5)  NOT NULL,
+    CONSTRAINT Depozit_pk PRIMARY KEY (depozitID)
+) ;
+
+-- Table: Furnizori
+CREATE TABLE Furnizori (
+    furnizoriID number(5)  NOT NULL,
+    nume varchar2(20)  NOT NULL,
+    nrtelefon number(10)  NOT NULL,
+    email varchar2(20)  NOT NULL,
+    companie varchar2(20)  NOT NULL,
+    website varchar2(20)  NOT NULL,
+    tara varchar2(10)  NOT NULL,
+    manager varchar2(10)  NOT NULL,
+    managerEmail varchar2(20)  NOT NULL,
+    managerTelefon number(10)  NOT NULL,
+    CONSTRAINT Furnizori_pk PRIMARY KEY (furnizoriID)
+) ;
+
+-- Table: Produse
+CREATE TABLE Produse (
+    produseID number(5)  NOT NULL,
+    nume varchar2(20)  NOT NULL,
+    descriere varchar2(50)  NOT NULL,
+    pret number(10)  NOT NULL,
+    categorie varchar2(20)  NOT NULL,
+    discount number(10)  NOT NULL,
+    unit varchar2(20)  NOT NULL,
+    furnizoriID number(5)  NOT NULL,
+    CONSTRAINT Produse_pk PRIMARY KEY (produseID)
+) ;
+
+-- Table: ProduseComenzi
+CREATE TABLE ProduseComenzi (
+    Comenzi_comandaID number(5)  NOT NULL,
+    Produse_produseID number(5)  NOT NULL,
+    CONSTRAINT ProduseComenzi_pk PRIMARY KEY (Comenzi_comandaID,Produse_produseID)
+) ;
+
+-- Table: Vanzari
+CREATE TABLE Vanzari (
+    vanzariID number(5)  NOT NULL,
+    cantitate number(5)  NOT NULL,
+    dataVanzare varchar2(11)  NOT NULL,
+    unit number(10)  NOT NULL,
+    pretTotal number(5)  NOT NULL,
+    discount number(10)  NOT NULL,
+    produseID number(5)  NOT NULL,
+    CONSTRAINT Vanzari_pk PRIMARY KEY (vanzariID)
+) ;
+
+-- foreign keys
+-- Reference: Comenzi_Clienti (table: Comenzi)
+ALTER TABLE Comenzi ADD CONSTRAINT Comenzi_Clienti
+    FOREIGN KEY (clientID)
+    REFERENCES Clienti (clientID);
+
+-- Reference: Depozit_Produse (table: Depozit)
+ALTER TABLE Depozit ADD CONSTRAINT Depozit_Produse
+    FOREIGN KEY (produseID)
+    REFERENCES Produse (produseID);
+
+-- Reference: Produse_Furnizori (table: Produse)
+ALTER TABLE Produse ADD CONSTRAINT Produse_Furnizori
+    FOREIGN KEY (furnizoriID)
+    REFERENCES Furnizori (furnizoriID);
+
+-- Reference: Table_8_Angajati (table: ComenzileAngajatilor)
+ALTER TABLE ComenzileAngajatilor ADD CONSTRAINT Table_8_Angajati
+    FOREIGN KEY (Angajati_angajatID)
+    REFERENCES Angajati (angajatID);
+
+-- Reference: Table_8_Comenzi (table: ComenzileAngajatilor)
+ALTER TABLE ComenzileAngajatilor ADD CONSTRAINT Table_8_Comenzi
+    FOREIGN KEY (Comenzi_comandaID)
+    REFERENCES Comenzi (comandaID);
+
+-- Reference: Table_9_Comenzi (table: ProduseComenzi)
+ALTER TABLE ProduseComenzi ADD CONSTRAINT Table_9_Comenzi
+    FOREIGN KEY (Comenzi_comandaID)
+    REFERENCES Comenzi (comandaID);
+
+-- Reference: Table_9_Produse (table: ProduseComenzi)
+ALTER TABLE ProduseComenzi ADD CONSTRAINT Table_9_Produse
+    FOREIGN KEY (Produse_produseID)
+    REFERENCES Produse (produseID);
+
+-- Reference: Vanzari_Produse (table: Vanzari)
+ALTER TABLE Vanzari ADD CONSTRAINT Vanzari_Produse
+    FOREIGN KEY (produseID)
+    REFERENCES Produse (produseID);
+
+
+
+INSERT INTO Angajati
+(angajatID, nume, nrtelefon, email, post, salariul)
+VALUES
+(1, 'Andrei', 72332233, 'andrei@email.com', 'manager', 3500);
+
+INSERT INTO Angajati
+(angajatID, nume, nrtelefon, email, post, salariul)
+VALUES
+(2, 'Andreea', 72435233, 'andre32@email.com', 'barista', 2000);
+
+INSERT INTO Angajati
+(angajatID, nume, nrtelefon, email, post, salariul)
+VALUES
+(3, 'Mihai', 723535553, 'mihai@yahoo.com', 'barman', 2400);
+
+
+INSERT INTO Comenzi
+(comandaID, dataComanda, costTotal, metodaDePlata, statusComanda, clientID)
+VALUES
+(1, 112711223, 15, 'cash', 'seprepara', 1);
+
+INSERT INTO Comenzi
+(comandaID, dataComanda, costTotal, metodaDePlata, statusComanda, clientID)
+VALUES
+(2, 112911223, 15, 'cash', 'finalizata', 1);
+
+INSERT INTO Clienti
+(ClientID, nume, nrtelefon, adresa, loialitate, preferinte)
+VALUES
+(1, 'Mircea', 724605809, 'Lujerului_9', 10, 'Capuccino_ovaz');
+
+INSERT INTO Clienti
+(ClientID, nume, nrtelefon, adresa, loialitate, preferinte)
+VALUES
+(2, 'Antonio', 724205409, 'NicolaeGrigorescu_11', 0, 'Latte_soia');
+
+INSERT INTO Clienti
+(ClientID, nume, nrtelefon, adresa, loialitate, preferinte)
+VALUES
+(3, 'Ana', 724448092, 'Dobritei_1', 40, 'BananaBread');
+
+INSERT INTO Depozit
+(depozitID, cantitate, cost, rePastrare, reComanda, valoareDepozit, produseID)
+VALUES
+(1, 3, 15, 10,15, 45, 1);
+
+INSERT INTO Depozit
+(depozitID, cantitate, cost, rePastrare, reComanda, valoareDepozit, produseID)
+VALUES
+(2, 2, 21, 10,15, 42, 2);
+
+INSERT INTO Produse
+(produseID, nume, descriere, pret, categorie, discount,  unit, furnizoriID)
+VALUES
+(1, 'Capuccino', '1shotEspresso_150mlLapte', 15, 'cafea', 0, 'ml', 1 );
+
+INSERT INTO Produse
+(produseID, nume, descriere, pret, categorie, discount,  unit, furnizoriID)
+VALUES
+(2, 'Latte', '2shot-uriEspresso_260mlLapte', 21, 'cafea', 0, 'ml', 1 );
+
+
+
+INSERT INTO Furnizori
+(furnizoriID, nume, nrtelefon, email, companie, website, tara, manager, managerEmail, managerTelefon )
+VALUES
+(1, 'Cafenea', 723123899, 'cafenea@email.com', 'CafeneaSRL', 'www.cafenea.com', 'Romania', 'Andrei', 'andrei@email.com', 72332233);
+
+
+INSERT INTO Furnizori
+(furnizoriID, nume, nrtelefon, email, companie, website, tara, manager, managerEmail, managerTelefon )
+VALUES
+(2, 'NapolactBucuresti', 724323349, 'napolactbu@email.com', 'NapolactSRL', 'www.napolact.com', 'Romania', 'Grigore', 'grigor2@email.com', 724312451);
+
+INSERT INTO Vanzari
+(vanzariID, cantitate, dataVanzare, unit, pretTotal, discount, produseID )
+VALUES
+(1, 1, '112711223', 1, 21, 0, 1);
+
+INSERT INTO Vanzari
+(vanzariID, cantitate, dataVanzare, unit, pretTotal, discount, produseID )
+VALUES
+(2, 1, '112911223', 1, 15, 0, 2);
+
+
+
+-- End of file...
+
